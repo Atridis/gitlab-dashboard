@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gitlab dashboard</title>
+  <meta charset="utf-8" />
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/components/card.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/components/grid.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/components/message.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/components/dropdown.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/components/icon.css" />  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css">
+  <!--link rel="stylesheet" href="css/style.css"-->
+</head>
+<body>
+    <div id="app">
+      <table class="ui celled table">
+         <div v-show="onError" class="row">
+           <div class="eight wide column centered">
+             <!--div class="ui red message">{{ onError.message }}</div-->
+           </div>
+         </div>
+         <div v-show="loading" class="row">
+             <div class="ui large active centered inline loader"></div>
+         </div>
+
+         <tr v-for="pipe in project_pipelines">
+           <td v-for="pipeline in pipe">
+              <i class="icon" v-bind:class="statusIcon(pipeline)"></i>
+              {{ pipeline.short_sha1 }}
+              <div class="ui dropdown" v-dropdown>
+                <i v-on:click="say(pipeline.id)" class="icon" v-bind:class="{ notched: pipeline.loading_jobs, circle: pipeline.loading_jobs, loading: pipeline.loading_jobs, dropdown: !pipeline.loading_jobs }"></i>
+                <div class="menu">
+                  <div v-for="(stage, stage_name) in pipeline.stages" class="item" >
+                    <i class="dropdown icon"></i>
+                    {{ stage_name }}
+                    <div class="menu">
+                      <div v-for="(job, index) in stage.jobs" class="item"><a target="_blank" v-bind:href="job.link">{{ job.name }}</a></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <br>
+              {{ pipeline.author }} <br>
+              {{ pipeline.title }}<br>
+              {{ pipeline.started_from_now }}
+           </td>
+         </tr>
+      </table>
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/components/dropdown.js"></script>
+  
+    <!--script src="js/vue.min.js"></script-->
+    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"></script-->
+    <script src="https://unpkg.com/moment@2.20.1/moment.js"></script>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
