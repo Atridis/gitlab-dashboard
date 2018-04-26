@@ -20,7 +20,8 @@ Vue.directive('dropdown', {
 const app = new Vue({
     el: '#app',
     data: {
-        project_pipelines: {},
+        project_pipeline_keys: {},
+        project_pipelines: [],
         projects: {},
         pipelines: [],
         pipelinesMap: {},
@@ -227,13 +228,16 @@ const app = new Vue({
                     loading_jobs: false
                   }
 
-                  const project_pipeline_key = p.project.nameWithNamespace + '/' + p.project.branch
-                  if (self.project_pipelines[project_pipeline_key] == undefined) {
-                    Vue.set(self.project_pipelines, project_pipeline_key, [])
+                  const project_pipeline_key = p.project.nameWithNamespace + '/' + p.project.branch                 
+                  if (self.project_pipeline_keys[project_pipeline_key] == undefined) {                   
+                    const new_index = self.project_pipelines.push([]) - 1
+                    Vue.set(self.project_pipeline_keys, project_pipeline_key, new_index)
                   }
-                  
-                  self.project_pipelines[project_pipeline_key].push(project)                 
+
+                  index = self.project_pipeline_keys[project_pipeline_key]
+                  self.project_pipelines[index].push(project)
                   self.pipelines.push(project)
+                  self.project_pipelines[index].sort(function(a, b){return new Date(b.started_at) - new Date(a.started_at);})
 
                   Vue.set(self.pipelinesMap, pipelineId, project)
                 }
@@ -282,5 +286,3 @@ const app = new Vue({
         }        
     }
 })
-        
-
