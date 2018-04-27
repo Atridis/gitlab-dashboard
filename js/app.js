@@ -20,6 +20,7 @@ Vue.directive('dropdown', {
 const app = new Vue({
     el: '#app',
     data: {
+        title_max_length: 26,
         project_pipeline_keys: {},
         project_pipelines: [],
         projects: {},
@@ -50,7 +51,7 @@ const app = new Vue({
 
     },
     methods: {
-        say: function (pipelineId) {
+        get_jobs: function (pipelineId) {
           const self = this
           const b = self.pipelinesMap[pipelineId]
 
@@ -199,7 +200,7 @@ const app = new Vue({
               .then(function(pipeline) {
                 const startedAt = pipeline.data.started_at
                 const startedFromNow = moment(startedAt).fromNow()
-                const b = self.pipelinesMap[pipelineId]
+                const b = self.pipelinesMap[pipeline.data.id]
 
                 if (b !== undefined) {
                   b.id = pipeline.data.id
@@ -212,16 +213,22 @@ const app = new Vue({
                   b.short_sha1 = commit.data.short_id
                 } 
                 else {
+                  const max_len = self.title_max_length
+                  const title = commit.data.title
+                  const short_title = (title.length < max_len ? title : title.substring(0, max_len - 3) + '...')
                   const project = {
                     project: p.project.projectName,
-                    id: pipeline.data.id,
+                    id: pipeline.data.id,                    
+                    link: 'https://' + self.gitlab + '/' + p.project.nameWithNamespace + '/pipelines/' + pipeline.data.id,
                     status: pipeline.data.status,
                     started_from_now: startedFromNow,
                     started_at: startedAt,
                     author: commit.data.author_name,
+                    user_avatar: pipeline.data.user.avatar_url,
                     project_path: p.project.nameWithNamespace,
                     branch: p.project.branch,
-                    title: commit.data.title,
+                    title: title,
+                    short_title: short_title,
                     sha1: commit.data.id,
                     short_sha1: commit.data.short_id,
                     stages: {},
@@ -276,7 +283,8 @@ const app = new Vue({
                   b.stages[stageName].jobs.push({
                     name: jobs.data[i].name,
                     id: jobs.data[i].id,
-                    link: "https://" + self.gitlab + '/' + b.project_path + '/-/jobs/' + jobs.data[i].id
+                    status: jobs.data[i].status,
+                    link: 'https://' + self.gitlab + '/' + b.project_path + '/-/jobs/' + jobs.data[i].id
                   })
                 }
                 b.loading_jobs = false
@@ -286,3 +294,5 @@ const app = new Vue({
         }        
     }
 })
+        
+
