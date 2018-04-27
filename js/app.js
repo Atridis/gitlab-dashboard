@@ -20,8 +20,9 @@ Vue.directive('dropdown', {
 const app = new Vue({
     el: '#app',
     data: {
-        title_max_length: 26,
+        title_max_length: 30,
         project_pipeline_keys: {},
+        project_pipeline_indeces: {},
         project_pipelines: [],
         projects: {},
         pipelines: [],
@@ -239,6 +240,7 @@ const app = new Vue({
                   if (self.project_pipeline_keys[project_pipeline_key] == undefined) {                   
                     const new_index = self.project_pipelines.push([]) - 1
                     Vue.set(self.project_pipeline_keys, project_pipeline_key, new_index)
+                    Vue.set(self.project_pipeline_indeces, new_index, project_pipeline_key)
                   }
 
                   index = self.project_pipeline_keys[project_pipeline_key]
