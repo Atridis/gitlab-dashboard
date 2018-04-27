@@ -27,26 +27,31 @@
 
          <tr v-for="pipe in project_pipelines">
            <td v-for="pipeline in pipe">
+              
               <i class="icon" v-bind:class="statusIcon(pipeline)"></i>
-              {{ pipeline.short_sha1 }}
+              <a target="_blank" v-bind:href="pipeline.link">{{ pipeline.short_sha1 }}</a>
               <div class="ui dropdown" v-dropdown>
-                <i v-on:click="say(pipeline.id)" class="icon" v-bind:class="{ notched: pipeline.loading_jobs, circle: pipeline.loading_jobs, loading: pipeline.loading_jobs, dropdown: !pipeline.loading_jobs }"></i>
+                <i v-on:click="get_jobs(pipeline.id)" class="icon" v-bind:class="{ notched: pipeline.loading_jobs, circle: pipeline.loading_jobs, loading: pipeline.loading_jobs, dropdown: !pipeline.loading_jobs }"></i>
                 <div class="menu">
                   <div v-for="(stage, stage_name) in pipeline.stages" class="item" >
                     <i class="dropdown icon"></i>
                     {{ stage_name }}
                     <div class="menu">
-                      <div v-for="(job, index) in stage.jobs" class="item"><a target="_blank" v-bind:href="job.link">{{ job.name }}</a></div>
+                      <div v-for="(job, index) in stage.jobs" class="item">
+                        <i class="icon" v-bind:class="statusIcon(job)"></i>
+                        <a target="_blank" v-bind:href="job.link">{{ job.name }}</a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              
               <br>
-              {{ pipeline.author }} <br>
-              {{ pipeline.title }}<br>
-              {{ pipeline.started_from_now }}<br>
-              {{ pipeline.project_path + "/" + pipeline.branch}}
+              <div class="ui label detail">{{ pipeline.started_from_now }}</div>
+              <br>
+              <div class="ui blue label">{{ pipeline.author }}</div>
+              <br>
+              {{ pipeline.short_title }}<br>
+              {{ pipeline.project_path + "/" + pipeline.branch }}
            </td>
          </tr>
       </table>
