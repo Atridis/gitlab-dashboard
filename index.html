@@ -15,7 +15,7 @@
 </head>
 <body>
     <div id="app">
-      <table class="ui celled table">
+      <table class="ui celled structured table">
          <div v-show="onError" class="row">
            <div class="eight wide column centered">
              <!--div class="ui red message">{{ onError.message }}</div-->
@@ -24,36 +24,36 @@
          <div v-show="loading" class="row">
              <div class="ui large active centered inline loader"></div>
          </div>
-
-         <tr v-for="pipe in project_pipelines">
-           <td v-for="pipeline in pipe">
-              
-              <i class="icon" v-bind:class="statusIcon(pipeline)"></i>
-              <a target="_blank" v-bind:href="pipeline.link">{{ pipeline.short_sha1 }}</a>
-              <div class="ui dropdown" v-dropdown>
-                <i v-on:click="get_jobs(pipeline.id)" class="icon" v-bind:class="{ notched: pipeline.loading_jobs, circle: pipeline.loading_jobs, loading: pipeline.loading_jobs, dropdown: !pipeline.loading_jobs }"></i>
-                <div class="menu">
-                  <div v-for="(stage, stage_name) in pipeline.stages" class="item" >
-                    <i class="dropdown icon"></i>
-                    {{ stage_name }}
-                    <div class="menu">
-                      <div v-for="(job, index) in stage.jobs" class="item">
-                        <i class="icon" v-bind:class="statusIcon(job)"></i>
-                        <a target="_blank" v-bind:href="job.link">{{ job.name }}</a>
+         <template v-for="(pipe, index) in project_pipelines">
+           <tr><td colspan="100"><h4>{{ project_pipeline_indeces[index] }}</h4></td></tr>
+           <tr>
+            <td v-for="pipeline in pipe">
+                <i class="icon" v-bind:class="statusIcon(pipeline)"></i>
+                <a target="_blank" v-bind:href="pipeline.link">{{ pipeline.short_sha1 }}</a>
+                <div class="ui dropdown" v-dropdown>
+                  <i v-on:click="get_jobs(pipeline.id)" class="icon" v-bind:class="{ notched: pipeline.loading_jobs, circle: pipeline.loading_jobs, loading: pipeline.loading_jobs, dropdown: !pipeline.loading_jobs }"></i>
+                  <div class="menu">
+                    <div v-for="(stage, stage_name) in pipeline.stages" class="item" >
+                      <i class="dropdown icon"></i>
+                      {{ stage_name }}
+                      <div class="menu">
+                        <div v-for="(job, index) in stage.jobs" class="item">
+                          <i class="icon" v-bind:class="statusIcon(job)"></i>
+                          <a target="_blank" v-bind:href="job.link">{{ job.name }}</a>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <br>
-              <div class="ui label detail">{{ pipeline.started_from_now }}</div>
-              <br>
-              <div class="ui blue label">{{ pipeline.author }}</div>
-              <br>
-              {{ pipeline.short_title }}<br>
-              {{ pipeline.project_path + "/" + pipeline.branch }}
-           </td>
-         </tr>
+                <br>
+                <div class="ui label detail">{{ pipeline.started_from_now }}</div>
+                <br>
+                <div class="ui blue label">{{ pipeline.author }}</div>
+                <br>
+                {{ pipeline.short_title }}
+            </td>
+           </tr>
+         </template>
       </table>
     </div>
     <script src="https://unpkg.com/vue"></script>
