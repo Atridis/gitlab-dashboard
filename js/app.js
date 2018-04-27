@@ -90,7 +90,7 @@ const app = new Vue({
             self.gitlab = getParameterByName("gitlab")
             self.token = getParameterByName("token")
             self.ref = getParameterByName("ref")
-            self.jobs_per_line = getParameterByName("jobs_per_line")
+            self.jobs_per_line = getParameterByName("jobs_per_line") || self.jobs_per_line
             self.repositories = []
 
             const repositoriesParameter = getParameterByName("projects")
