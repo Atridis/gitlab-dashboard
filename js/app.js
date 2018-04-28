@@ -236,11 +236,12 @@ const app = new Vue({
                     loading_jobs: false
                   }
 
-                  const project_pipeline_key = p.project.nameWithNamespace + '/' + p.project.branch                 
+                  const project_pipeline_key = p.project.nameWithNamespace + '/' + p.project.branch
+                  const project_pipeline_name = p.data.name + ': ' + project_pipeline_key
                   if (self.project_pipeline_keys[project_pipeline_key] == undefined) {                   
                     const new_index = self.project_pipelines.push([]) - 1
                     Vue.set(self.project_pipeline_keys, project_pipeline_key, new_index)
-                    Vue.set(self.project_pipeline_indeces, new_index, project_pipeline_key)
+                    Vue.set(self.project_pipeline_indeces, new_index, project_pipeline_name)
                   }
 
                   index = self.project_pipeline_keys[project_pipeline_key]
