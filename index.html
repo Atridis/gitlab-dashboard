@@ -25,7 +25,13 @@
              <div class="ui large active centered inline loader"></div>
          </div>
          <template v-for="(pipe, index) in project_pipelines">
-           <tr><td colspan="100"><h4>{{ project_pipeline_indeces[index] }}</h4></td></tr>
+           <tr>
+             <td colspan="100">
+               <h4>{{ project_pipeline_indeces[index] }}
+                 <div v-if="index == 0" class="ui right floated button">Last updated at {{lastRun}}</div>
+               </h4>
+             </td>
+           </tr>
            <tr>
             <td v-for="pipeline in pipe">
                 <i class="icon" v-bind:class="statusIcon(pipeline)"></i>
