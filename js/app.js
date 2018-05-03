@@ -165,7 +165,7 @@ const app = new Vue({
             const self = this
             self.repositories.forEach(function(repository) {
               self.loading = true
-              axios.get('/projects/' + repository.nameWithNamespace.replace('/', '%2F'))
+              axios.get('/projects/' + repository.nameWithNamespace.replace(/[/]/g, '%2F'))
                 .then(function (response) {
                   self.loading = false
                   if (repository.branch === "") {
