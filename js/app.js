@@ -17,6 +17,10 @@ Vue.directive('dropdown', {
   }
 })
 
+function lastRun() {
+  return moment().format('ddd, YYYY-MM-DD HH:mm:ss')
+}
+
 const app = new Vue({
     el: '#app',
     data: {
@@ -34,12 +38,15 @@ const app = new Vue({
         repositories: null,
         loading: false,
         invalidConfig: false,
-        onError: null,
         some_array: [],
-        superflag: false
+        superflag: false,
+        lastRun: lastRun(),
+        onError: null
     },
-    created: function() {
-        this.loadConfig()
+    created: function() {        
+        var self = this
+        
+        self.loadConfig()
 
         const error = this.validateConfig()
         if (error !== undefined) {
@@ -47,8 +54,12 @@ const app = new Vue({
           return
         }
 
-        this.setupDefaults()
-        this.fetchProjects()
+        self.setupDefaults()
+        self.fetchProjects()
+        // update every 5 minutes
+        setInterval(function() {
+          self.updateBuilds()
+        }, 300000)
 
     },
     methods: {
@@ -194,6 +205,7 @@ const app = new Vue({
             self.onError = null
             Object.values(self.projects).forEach(function(p) { self.fetchBuild(p) })
             self.pipelines.sort(function(a, b) { return a.project.localeCompare(b.project) })
+            self.lastRun = lastRun()
         },
         updateBuildInfo: function(p, commit, pipelineId) {
             const self = this
