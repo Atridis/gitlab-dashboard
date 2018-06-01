@@ -6,5 +6,7 @@ function getParameterByName(name, url) {
       results = regex.exec(url);
   if (!results) return null;
   if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
+  // / and %2F problem
+  //return decodeURIComponent(results[2].replace(/\+/g, " "));
+  return results[2].replace(/\+/g, " ");
 }
